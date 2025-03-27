@@ -1,5 +1,6 @@
 package bikerboys.ods;
 
+import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.api.ModInitializer;
 
 import org.slf4j.Logger;
@@ -18,7 +19,7 @@ public class OmniDirectionalSound implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
-
+		MidnightConfig.init(MOD_ID, MidnightConfigLib.class);
 		LOGGER.info("Hello Fabric world!");
 	}
 }

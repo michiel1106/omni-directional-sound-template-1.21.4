@@ -1,0 +1,7 @@
+{
+  "omni-directional-sound.midnightconfig.title": "Omni Directional Sound Config",
+  "omni-directional-sound.midnightconfig.category.HUD": "Hud",
+  "omni-directional-sound.midnightconfig.category.Debug": "Debug",
+  "omni-directional-sound.midnightconfig.enum.ArrowEnum.STATIC": "Static",
+  "omni-directional-sound.midnightconfig.enum.ArrowEnum.DYNAMIC": "Dynamic"
+}

@@ -18,8 +18,9 @@ public class CustomSoundListener implements SoundInstanceListener {
     public void onSoundPlayed(SoundInstance sound, WeightedSoundSet soundSet, float range) {
         Vec3d soundPosition = new Vec3d(sound.getX(), sound.getY(), sound.getZ());
         // Add the sound position only if it's not already being tracked
-        if (!soundStartTimes.containsKey(soundPosition)) {
+        if (!soundStartTimes.containsKey(soundPosition) && !MidnightConfigLib.ignoredSounds.contains(sound.getId().toString())) {
             soundPositions.add(soundPosition);
+
         }
     }
 
@@ -44,7 +45,7 @@ public class CustomSoundListener implements SoundInstanceListener {
 
                 long elapsed = currentTime - soundStartTimes.get(soundPos);
 
-                if (elapsed > 500) {
+                if (elapsed > MidnightConfigLib.arrowFade) {
                     // Mark expired sounds for removal
                     soundsToRemove.add(soundPos);
                 } else {
