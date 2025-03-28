@@ -3,5 +3,18 @@
   "omni-directional-sound.midnightconfig.category.HUD": "Hud",
   "omni-directional-sound.midnightconfig.category.Debug": "Debug",
   "omni-directional-sound.midnightconfig.enum.ArrowEnum.STATIC": "Static",
-  "omni-directional-sound.midnightconfig.enum.ArrowEnum.DYNAMIC": "Dynamic"
+  "omni-directional-sound.midnightconfig.enum.ArrowEnum.DYNAMIC": "Dynamic",
+
+  "omni-directional-sound.midnightconfig.xOffset.tooltip": "The X offset of the whole 4 arrow HUD, supports decimals",
+  "omni-directional-sound.midnightconfig.yOffset.tooltip": "The Y offset of the whole 4 arrow HUD, supports decimals",
+
+
+  "omni-directional-sound.midnightconfig.arrowFade.tooltip": "How long in milliseconds it takes before the arrows disappear",
+  "omni-directional-sound.midnightconfig.maxSoundRange.tooltip": "The range before it stops registering sounds",
+  "omni-directional-sound.midnightconfig.editMode.tooltip": "Shows all the static arrow locations for editing the offsets",
+  "omni-directional-sound.midnightconfig.arrowScale.tooltip": "Size of the arrows",
+  "omni-directional-sound.midnightconfig.arrowOffset.tooltip": "Offset of the arrows relative to the center of the screen.",
+  "omni-directional-sound.midnightconfig.comment": "  A list of sound types that dont get registered, I recommend editing this in the config file itself with a text editor. \nneeds the sound id, easy way to find it is using /playsound"
+
+
 }
