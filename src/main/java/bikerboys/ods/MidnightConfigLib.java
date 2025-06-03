@@ -9,24 +9,31 @@ public class MidnightConfigLib extends MidnightConfig {
 
 
 
-    @Entry(category = "HUD", name = "Arrow Offset") public static int arrowOffset = 20;
+    @Entry(name = "Arrow Offset") public static int arrowOffset = 20;
 
-    @Entry(category = "HUD", name = "Arrow Scale") public static int arrowScale = 1;
-    @Entry(category = "HUD", name = "Arrow Display Mode") public static ArrowEnum arrowEnum = ArrowEnum.STATIC;
-    @Entry(category = "HUD", name = "Arrow Disappear (ms)") public static int arrowFade = 500;
-    @Entry(category = "HUD", name = "Max Sound Range") public static int maxSoundRange = 32;
+    @Entry(name = "Arrow Scale") public static int arrowScale = 1;
+    @Entry(name = "Arrow Display Mode") public static ArrowEnum arrowEnum = ArrowEnum.STATIC;
+    @Entry(name = "Whitelist/Blacklist") public static ListEnum listEnum = ListEnum.BLACKLIST;
+    @Entry(name = "Arrow Disappear (ms)") public static int arrowFade = 500;
+    @Entry(name = "Max Sound Range") public static int maxSoundRange = 32;
+    @Entry(name = "Colored arrows") public static boolean coloredArrows = true;
 
-    @Entry(category = "HUD", name = "X Offset", min = -1000000000) public static float xOffset = 0;
-    @Entry(category = "HUD", name = "Y Offset", min = -1000000000) public static float yOffset = 0;
-    @Entry(category = "HUD", name = "Edit Mode") public static boolean editMode = false;
+    @Entry(name = "X Offset", min = -1000000000) public static float xOffset = 0;
+    @Entry(name = "Y Offset", min = -1000000000) public static float yOffset = 0;
+    @Entry(name = "Edit Mode") public static boolean editMode = false;
+
 
 
     public enum ArrowEnum {
         STATIC, DYNAMIC
     }
 
-    @Comment(category = "HUD") public static String comment;
-    @Entry(category = "HUD", name = "Ignored Sounds", width = 600) public static List<String> ignoredSounds = Lists.newArrayList(
+    public enum ListEnum {
+        WHITELIST, BLACKLIST
+    }
+
+    @Comment() public static String comment;
+    @Entry(name = "Ignored Sounds", width = 600) public static List<String> ignoredSounds = Lists.newArrayList(
             "minecraft:block.stone.step",
             "minecraft:block.grass.step",
             "minecraft:block.sand.step",
@@ -65,8 +72,9 @@ public class MidnightConfigLib extends MidnightConfig {
             "minecraft:block.water.step",
             "minecraft:block.generic.step");
 
-    @Entry(category = "Debug", name = "Sound Angle") public static boolean soundAngle = false;
-    @Entry(category = "Debug", name = "Test Int", min = -100000) public static float testInt = 0;
-    @Entry(category = "Debug", name = "Test Int2", min = -100000) public static int testInt2 = 0;
+
+    @Entry(name = "Sound Angle") public static boolean soundAngle = false;
+    @Entry(name = "Test Int", min = -100000) public static float testInt = 0;
+    @Entry(name = "Test Int2", min = -100000) public static int testInt2 = 0;
 
 }

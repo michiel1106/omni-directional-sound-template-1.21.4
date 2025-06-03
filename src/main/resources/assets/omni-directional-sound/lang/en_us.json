@@ -14,7 +14,7 @@
   "omni-directional-sound.midnightconfig.editMode.tooltip": "Shows all the static arrow locations for editing the offsets",
   "omni-directional-sound.midnightconfig.arrowScale.tooltip": "Size of the arrows",
   "omni-directional-sound.midnightconfig.arrowOffset.tooltip": "Offset of the arrows relative to the center of the screen.",
-  "omni-directional-sound.midnightconfig.comment": "  A list of sound types that dont get registered, I recommend editing this in the config file itself with a text editor. \nneeds the sound id, easy way to find it is using /playsound"
+  "omni-directional-sound.midnightconfig.comment": "  A list of sound types that dont get registered, I recommend editing this in the config file itself with a text editor. \n needs the sound id, easy way to find it is using /playsound"
 
 
 }

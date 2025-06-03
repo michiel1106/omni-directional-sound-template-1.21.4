@@ -1,15 +1,18 @@
 package bikerboys.ods;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
+
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
+
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderTickCounter;
+
+
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector2f;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.Map;
@@ -18,30 +21,41 @@ import static java.lang.Math.*;
 
 public class OmniDirectionalSoundClient implements ClientModInitializer {
 	private static final Identifier EXAMPLE_LAYER = Identifier.of(OmniDirectionalSound.MOD_ID, "hud-ods-layer");
-
+	CustomSoundListener soundListener = new CustomSoundListener();
 	@Override
 	public void onInitializeClient() {
-		HudLayerRegistrationCallback.EVENT.register(layeredDrawer -> layeredDrawer.attachLayerBefore(IdentifiedLayer.OVERLAY_MESSAGE, EXAMPLE_LAYER, OmniDirectionalSoundClient::render));
+		//HudLayerRegistrationCallback.EVENT.register(layeredDrawer -> layeredDrawer.attachLayerBefore(IdentifiedLayer.OVERLAY_MESSAGE, EXAMPLE_LAYER, OmniDirectionalSoundClient::render));
 
-		;
+		HudRenderCallback.EVENT.register(OmniDirectionalSoundClient::render);
+
+		ClientTickEvents.START_CLIENT_TICK.register(minecraftClient -> {
+			System.out.println(CustomSoundListener.soundPositions);
+			System.out.println(CustomSoundListener.soundStartTimes);
+		});
+
+
+		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+
+			client.getSoundManager().registerListener(soundListener);
+		});
 
 	}
 
 
 
-	private static void render(DrawContext context, RenderTickCounter tickCounter) {
+	private static void render(MatrixStack context, float tickCounter) {
 		MinecraftClient mc = MinecraftClient.getInstance();
 
 		int x = mc.getWindow().getScaledWidth() / 2;
 		int y = mc.getWindow().getScaledHeight() / 2;
 
-		context.getMatrices().push();
+		context.push();
 
-		context.getMatrices().translate(x-2, y-4, 0); // Move to the specified position
+		context.translate(x-2, y-4, 0); // Move to the specified position
 
 
 		//context.drawText(mc.textRenderer, ">", 0, 0, 0xFFFFFF, false); // Draw the text
-		context.getMatrices().pop(); // Restore the original matrix
+		context.pop(); // Restore the original matrix
 
 
 
@@ -50,9 +64,7 @@ public class OmniDirectionalSoundClient implements ClientModInitializer {
 		}
 
 		// Set up custom sound listener
-		CustomSoundListener soundListener = new CustomSoundListener();
-		mc.getSoundManager().registerListener(soundListener);
-		mc.getSoundManager().getSoundDevices().clear();
+
 
 
 
@@ -60,7 +72,7 @@ public class OmniDirectionalSoundClient implements ClientModInitializer {
 
 
 		// Iterate over all nearby sounds
-		Map<Vec3d, Long> nearbySounds = CustomSoundListener.getNearbySoundLocations(playerPos, MidnightConfigLib.maxSoundRange);  // 30 blocks radius
+		Map<CustomSound, Long> nearbySounds = CustomSoundListener.getNearbySoundLocations(playerPos, MidnightConfigLib.maxSoundRange);  // 30 blocks radius
 		int ARROW_DISTANCE = MidnightConfigLib.arrowOffset; // Distance from the center
 
 		if (MidnightConfigLib.editMode) {
@@ -69,34 +81,54 @@ public class OmniDirectionalSoundClient implements ClientModInitializer {
 			int arrowX = centerX;
 			int arrowY = centerY;
 			int arrowRotation = 0;
+			int color = 0xFFFFFF;
+
 
 			arrowX = centerX - 3 * MidnightConfigLib.arrowScale;
 			arrowY = centerY - ARROW_DISTANCE;
 			arrowRotation = 270; // Point up
-			textrender(context, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset);
+			textrender(context, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset, color);
 
 
 			arrowX = centerX + ARROW_DISTANCE;
 			arrowY = centerY - 4 * MidnightConfigLib.arrowScale;
 			arrowRotation = 0; // Point right
-			textrender(context, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset);
+			textrender(context, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset, color);
 
 			arrowX = centerX + 4 * MidnightConfigLib.arrowScale ;
 			arrowY = centerY + ARROW_DISTANCE;
 			arrowRotation = 90; // Point down
-			textrender(context, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset);
+			textrender(context, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset, color);
 
 			arrowX = centerX - ARROW_DISTANCE;
 			arrowY = centerY + 3 * MidnightConfigLib.arrowScale;
 			arrowRotation = 180; // Point left
-			textrender(context, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset);
+			textrender(context, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset, color);
 		}
 
 
 
-		for (Map.Entry<Vec3d, Long> entry : nearbySounds.entrySet()) {
-			Vec3d soundPos = entry.getKey();
+		for (Map.Entry<CustomSound, Long> entry : nearbySounds.entrySet()) {
+			Vec3d soundPos = entry.getKey().getPos();
+			int color;
 
+			if (MidnightConfigLib.coloredArrows) {
+				switch (entry.getKey().soundCategory) {
+					case MASTER -> color = 0x00FF00;
+					case MUSIC -> color = 0x00FF00;
+					case RECORDS -> color = 0x00FF00;
+					case WEATHER -> color = 0x00FF00;
+					case BLOCKS -> color = 0x00FF00;
+					case HOSTILE -> color = 0xFF0000;
+					case NEUTRAL -> color = 0x00FF00;
+					case PLAYERS -> color = 0xFFFF00;
+					case AMBIENT -> color = 0x00FF00;
+					case VOICE -> color = 0x00FF00;
+					default -> color = 0x00FF00;
+				}
+			} else {
+				color = 0xFFFFFF;
+			}
 
 
 			Vec3d soundDirection = soundPos.subtract(playerPos).normalize();
@@ -172,9 +204,9 @@ public class OmniDirectionalSoundClient implements ClientModInitializer {
 				int adjustedX = (int) (arrowX - dx);
 				int adjustedY = (int) (arrowY - dy);
 
-				textrender(context, ">", arrowRotation, mc, adjustedX, adjustedY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset);
+				textrender(context, ">", arrowRotation, mc, adjustedX, adjustedY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset, color);
 			}  else {
-				textrender(context, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset);
+				textrender(context, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset, color);
 			}
 
 		}
@@ -183,17 +215,18 @@ public class OmniDirectionalSoundClient implements ClientModInitializer {
 	}
 
 
-	private static void textrender(DrawContext context, String text, int rotation, MinecraftClient mc, int x, int y, float xoffset, float yoffset) {
-		context.getMatrices().push();
+	private static void textrender(MatrixStack context, String text, int rotation, MinecraftClient mc, int x, int y, float xoffset, float yoffset, int color) {
+		context.push();
 
-		context.getMatrices().translate(xoffset, yoffset, 0);
-		context.getMatrices().translate(x, y, 0); // Move to the specified position
-		context.getMatrices().scale(MidnightConfigLib.arrowScale, MidnightConfigLib.arrowScale, 1);
+		context.translate(xoffset, yoffset, 0);
+		context.translate(x, y, 0); // Move to the specified position
+		context.scale(MidnightConfigLib.arrowScale, MidnightConfigLib.arrowScale, 1);
 
 
-		context.getMatrices().multiply(RotationAxis.POSITIVE_Z.rotationDegrees(rotation)); // Rotate the text
-		context.drawText(mc.textRenderer, text, 0, 0, 0xFFFFFF, false); // Draw the text
-		context.getMatrices().pop(); // Restore the original matrix
+		context.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float) rotation)); // Rotate the text
+		mc.textRenderer.draw(context, text, 0, 0, color); // Draw the text
+
+		context.pop(); // Restore the original matrix
 	}
 
 
