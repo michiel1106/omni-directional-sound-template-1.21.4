@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector2f;
 import net.minecraft.text.Text;
@@ -31,10 +32,6 @@ public class OmniDirectionalSoundClient implements ClientModInitializer {
 
 		HudRenderCallback.EVENT.register(OmniDirectionalSoundClient::render);
 
-		ClientTickEvents.START_CLIENT_TICK.register(minecraftClient -> {
-			System.out.println(CustomSoundListener.soundPositions);
-			System.out.println(CustomSoundListener.soundStartTimes);
-		});
 
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			client.getSoundManager().registerListener(soundListener);
@@ -45,11 +42,14 @@ public class OmniDirectionalSoundClient implements ClientModInitializer {
 
 
 
-	private static void render(MatrixStack context, float tickCounter) {
+	private static void render(DrawContext drawContext, float tickCounter) {
 		MinecraftClient mc = MinecraftClient.getInstance();
 
 		int x = mc.getWindow().getScaledWidth() / 2;
 		int y = mc.getWindow().getScaledHeight() / 2;
+
+
+		MatrixStack context = drawContext.getMatrices();
 
 		context.push();
 
@@ -89,23 +89,23 @@ public class OmniDirectionalSoundClient implements ClientModInitializer {
 			arrowX = centerX - 3 * MidnightConfigLib.arrowScale;
 			arrowY = centerY - ARROW_DISTANCE;
 			arrowRotation = 270; // Point up
-			textrender(context, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset, color);
+			textrender(drawContext, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset, color);
 
 
 			arrowX = centerX + ARROW_DISTANCE;
 			arrowY = centerY - 4 * MidnightConfigLib.arrowScale;
 			arrowRotation = 0; // Point right
-			textrender(context, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset, color);
+			textrender(drawContext, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset, color);
 
 			arrowX = centerX + 4 * MidnightConfigLib.arrowScale ;
 			arrowY = centerY + ARROW_DISTANCE;
 			arrowRotation = 90; // Point down
-			textrender(context, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset, color);
+			textrender(drawContext, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset, color);
 
 			arrowX = centerX - ARROW_DISTANCE;
 			arrowY = centerY + 3 * MidnightConfigLib.arrowScale;
 			arrowRotation = 180; // Point left
-			textrender(context, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset, color);
+			textrender(drawContext, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset, color);
 		}
 
 
@@ -206,9 +206,9 @@ public class OmniDirectionalSoundClient implements ClientModInitializer {
 				int adjustedX = (int) (arrowX - dx);
 				int adjustedY = (int) (arrowY - dy);
 
-				textrender(context, ">", arrowRotation, mc, adjustedX, adjustedY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset, color);
+				textrender(drawContext, ">", arrowRotation, mc, adjustedX, adjustedY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset, color);
 			}  else {
-				textrender(context, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset, color);
+				textrender(drawContext, ">", arrowRotation, mc, arrowX, arrowY, MidnightConfigLib.xOffset, MidnightConfigLib.yOffset, color);
 			}
 
 		}
@@ -217,7 +217,9 @@ public class OmniDirectionalSoundClient implements ClientModInitializer {
 	}
 
 
-	private static void textrender(MatrixStack context, String text, int rotation, MinecraftClient mc, int x, int y, float xoffset, float yoffset, int color) {
+	private static void textrender(DrawContext ctx, String text, int rotation, MinecraftClient mc, int x, int y, float xoffset, float yoffset, int color) {
+		MatrixStack context = ctx.getMatrices();
+
 		context.push();
 
 		context.translate(xoffset, yoffset, 0);
@@ -227,7 +229,9 @@ public class OmniDirectionalSoundClient implements ClientModInitializer {
 
 
 		context.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) rotation)); // Rotate the text
-		mc.textRenderer.draw(context, text, 0, 0, color); // Draw the text
+		//mc.textRenderer.draw(context, text, 0, 0, color); // Draw the text
+
+		ctx.drawText(mc.textRenderer, text, 0,0, color, false);
 
 
 
