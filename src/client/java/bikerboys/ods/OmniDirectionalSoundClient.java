@@ -2,7 +2,9 @@ package bikerboys.ods;
 
 import net.fabricmc.api.ClientModInitializer;
 
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
 import net.minecraft.client.MinecraftClient;
@@ -12,7 +14,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector2f;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.Map;
@@ -33,10 +36,9 @@ public class OmniDirectionalSoundClient implements ClientModInitializer {
 			System.out.println(CustomSoundListener.soundStartTimes);
 		});
 
-
-		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-
+		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			client.getSoundManager().registerListener(soundListener);
+
 		});
 
 	}
@@ -223,8 +225,11 @@ public class OmniDirectionalSoundClient implements ClientModInitializer {
 		context.scale(MidnightConfigLib.arrowScale, MidnightConfigLib.arrowScale, 1);
 
 
-		context.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float) rotation)); // Rotate the text
+
+		context.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) rotation)); // Rotate the text
 		mc.textRenderer.draw(context, text, 0, 0, color); // Draw the text
+
+
 
 		context.pop(); // Restore the original matrix
 	}

@@ -4,6 +4,19 @@
   "omni-directional-sound.midnightconfig.category.Debug": "Debug",
   "omni-directional-sound.midnightconfig.enum.ArrowEnum.STATIC": "Static",
   "omni-directional-sound.midnightconfig.enum.ArrowEnum.DYNAMIC": "Dynamic",
+  "omni-directional-sound.midnightconfig.enum.ListEnum.WHITELIST": "Whitelist",
+  "omni-directional-sound.midnightconfig.enum.ListEnum.BLACKLIST": "Blacklist",
+
+  "omni-directional-sound.midnightconfig.enum.listEnum.label.tooltip": "When set to whitelist it only shows the sounds in the list. When set to blacklist it shows every sound except the ones in the list",
+  "omni-directional-sound.midnightconfig.enum.listEnum.tooltip": "When set to whitelist it only shows the sounds in the list. When set to blacklist it shows every sound except the ones in the list",
+
+  "omni-directional-sound.midnightconfig.enum.ListEnum.Whitelist.label.tooltip": "When set to whitelist it only shows the sounds in the list. When set to blacklist it shows every sound except the ones in the list",
+  "omni-directional-sound.midnightconfig.enum.ListEnum.tooltip": "When set to whitelist it only shows the sounds in the list. When set to blacklist it shows every sound except the ones in the list",
+
+  "omni-directional-sound.midnightconfig.enum.ListEnum.WHITELIST.label.tooltip": "When set to whitelist it only shows the sounds in the list. When set to blacklist it shows every sound except the ones in the list",
+
+  "omni-directional-sound.midnightconfig.enum.ListEnum.whitelist.label.tooltip": "When set to whitelist it only shows the sounds in the list. When set to blacklist it shows every sound except the ones in the list",
+
 
   "omni-directional-sound.midnightconfig.xOffset.tooltip": "The X offset of the whole 4 arrow HUD, supports decimals",
   "omni-directional-sound.midnightconfig.yOffset.tooltip": "The Y offset of the whole 4 arrow HUD, supports decimals",
@@ -14,7 +27,7 @@
   "omni-directional-sound.midnightconfig.editMode.tooltip": "Shows all the static arrow locations for editing the offsets",
   "omni-directional-sound.midnightconfig.arrowScale.tooltip": "Size of the arrows",
   "omni-directional-sound.midnightconfig.arrowOffset.tooltip": "Offset of the arrows relative to the center of the screen.",
-  "omni-directional-sound.midnightconfig.comment": "  A list of sound types that dont get registered, I recommend editing this in the config file itself with a text editor. \n needs the sound id, easy way to find it is using /playsound"
+  "omni-directional-sound.midnightconfig.comment": "List of sounds. I recommend editing this in the config file itself with a text editor. needs the sound id."
 
 
 }
